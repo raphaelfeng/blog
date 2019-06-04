@@ -6,6 +6,7 @@
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Fri, 22 May 2015 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.rfeng.org/posts/index.xml" rel="self" type="application/rss+xml" />
     
@@ -13,7 +14,7 @@
     <item>
       <title>8 Steps to Migrating from JavaScript to TypeScript</title>
       <link>https://www.rfeng.org/posts/2015-05-22-8-steps-to-migrating-from-javascript-to-typescript/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 22 May 2015 00:00:00 +0000</pubDate>
       
       <guid>https://www.rfeng.org/posts/2015-05-22-8-steps-to-migrating-from-javascript-to-typescript/</guid>
       <description>We have been moving our Browser Agent to TypeScript recently. It’s fun to learn a new language and to see how it can benefit us.
