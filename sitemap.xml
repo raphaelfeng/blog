@@ -3,26 +3,26 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>www.rfeng.org/</loc>
+    <loc>https://www.rfeng.org/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>www.rfeng.org/posts/2015-05-22-8-steps-to-migrating-from-javascript-to-typescript/</loc>
+    <loc>https://www.rfeng.org/posts/2015-05-22-8-steps-to-migrating-from-javascript-to-typescript/</loc>
   </url>
   
   <url>
-    <loc>www.rfeng.org/categories/</loc>
+    <loc>https://www.rfeng.org/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>www.rfeng.org/posts/</loc>
+    <loc>https://www.rfeng.org/posts/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>www.rfeng.org/tags/</loc>
+    <loc>https://www.rfeng.org/tags/</loc>
     <priority>0</priority>
   </url>
   
