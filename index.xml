@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <link>http://example.org/</link>
+    <description>Recent content on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>8 Steps to Migrating from JavaScript to TypeScript</title>
+      <link>http://example.org/posts/2015-05-22-8-steps-to-migrating-from-javascript-to-typescript/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2015-05-22-8-steps-to-migrating-from-javascript-to-typescript/</guid>
+      <description>We have been moving our Browser Agent to TypeScript recently. It’s fun to learn a new language and to see how it can benefit us.
+Let me share with you how we have been doing it!
+Why TypeScript Before moving to TypeScript, our browser agent has thousands lines of code but in just two JavaScript files.
+We feel obliged to refactor it so as to make our life easier when adding more features.</description>
+    </item>
+    
+  </channel>
+</rss>

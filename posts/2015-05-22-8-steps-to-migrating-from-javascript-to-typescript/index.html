@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>8 Steps to Migrating from JavaScript to TypeScript - </title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="8 Steps to Migrating from JavaScript to TypeScript" />
+<meta property="og:description" content="We have been moving our Browser Agent to TypeScript recently. It’s fun to learn a new language and to see how it can benefit us.
+Let me share with you how we have been doing it!
+Why TypeScript Before moving to TypeScript, our browser agent has thousands lines of code but in just two JavaScript files.
+We feel obliged to refactor it so as to make our life easier when adding more features." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/posts/2015-05-22-8-steps-to-migrating-from-javascript-to-typescript/" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="8 Steps to Migrating from JavaScript to TypeScript"/>
+<meta name="twitter:description" content="We have been moving our Browser Agent to TypeScript recently. It’s fun to learn a new language and to see how it can benefit us.
+Let me share with you how we have been doing it!
+Why TypeScript Before moving to TypeScript, our browser agent has thousands lines of code but in just two JavaScript files.
+We feel obliged to refactor it so as to make our life easier when adding more features."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" /><script src="/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">8 Steps to Migrating from JavaScript to TypeScript</h1>
+			<div class="meta">Posted at &mdash; Jan 1, 0001</div>
+		</div>
+
+		<div class="markdown">
+			
+
+<p>We have been moving our Browser Agent to TypeScript recently.
+It’s fun to learn a new language and to see how it can benefit us.</p>
+
+<p>Let me share with you how we have been doing it!</p>
+
+<h1 id="why-typescript">Why TypeScript</h1>
+
+<p>Before moving to TypeScript, our browser agent has thousands lines of code but in just two JavaScript files.<br />
+We feel obliged to refactor it so as to make our life easier when adding more features.</p>
+
+<p>Having been experiencing the pain of developing large scale app in JavaScript, we decided to take a shot at<br />
+its friend languages that have better support for large scale development.</p>
+
+<p>After looking into languages such as TypeScript, CoffeeScript and PureScript, etc., we decided to go for<br />
+TypeScript for these reasons:</p>
+
+<ol>
+<li>Static Typing</li>
+<li>Module and Classes</li>
+<li>Superset of JavaScript, easier to learn for JavaScript developers</li>
+<li>Success story from our front-end team</li>
+</ol>
+
+<h1 id="effort-it-takes">Effort it Takes</h1>
+
+<h2 id="1-prepare-knowledge">1. Prepare Knowledge</h2>
+
+<ul>
+<li><a href="http://www.typescriptlang.org/">TypeScript Official Web Site</a> is the best start</li>
+<li><a href="https://www.stevefenton.co.uk/Content/TypeScript-Succinctly/">TypeScript Succinctly</a> is a good book for free
+If you are alraedy a JavaScript developer, it feels smooth to pick the knowledge up.</li>
+</ul>
+
+<h2 id="2-rename-file">2. Rename File</h2>
+
+<p>We rename all the js files to ts files and as TypeScript is just a superset of JavaScript, you can just start
+compiling your new ts files with the TypeScript compiler.</p>
+
+<h2 id="3-fix-compiling-errors">3. Fix Compiling Errors</h2>
+
+<p>There were quite a few compiling errors due to the static type checking by the compiler.<br />
+For instance, the compiler will complains about js code below:</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#f00;font-style:italic">// Example One
+</span><span style="color:#f00;font-style:italic">// typescript compiler declares the types of all the common JavaScript object
+</span><span style="color:#f00;font-style:italic">// in a lib.d.ts file
+</span><span style="color:#f00;font-style:italic">// access to a browser specific property that is not in lib.d.ts gives
+</span><span style="color:#f00;font-style:italic">// “error TS2339: Property &#39;chrome&#39; does not exist on type &#39;Window’.”
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">var</span> xdr = window.XDomainRequest;
+
+<span style="color:#f00;font-style:italic">// Example Two
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">function</span> foo(a: <span style="color:#00f">number</span>, b: <span style="color:#00f">number</span>) {
+    <span style="color:#00f">return</span>;
+}
+
+<span style="color:#f00;font-style:italic">// Optinal function args need to be marked explicitly in typescript, or it gives
+</span><span style="color:#f00;font-style:italic">// “error TS2346: Supplied parameters do not match any signature of call target.”
+</span><span style="color:#f00;font-style:italic"></span>foo(1);
+
+<span style="color:#f00;font-style:italic">// Example Three
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">var</span> myObj = {};
+
+<span style="color:#f00;font-style:italic">// creating new object property by dot syntax gives
+</span><span style="color:#f00;font-style:italic">// “error TS2339: Property &#39;name&#39; does not exist on type ‘{}’”
+</span><span style="color:#f00;font-style:italic">// beacause the implicit type of myObj is an empty object without ‘name’ property
+</span><span style="color:#f00;font-style:italic"></span>myObj.name = <span style="color:#009c00">&#34;myObj&#34;</span>;</code></pre></div>
+
+<p>The solutions are:</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#f00;font-style:italic">// Solution One
+</span><span style="color:#f00;font-style:italic">// declare the specific property on our own
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">interface</span> Window {
+    XDomainRequest?: <span style="color:#00f">any</span>;
+}
+
+<span style="color:#f00;font-style:italic">// Solution Two
+</span><span style="color:#f00;font-style:italic">// question mark the optional arg explicitly
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">function</span> foo(a: <span style="color:#00f">number</span>, b?: <span style="color:#00f">number</span>) {
+    <span style="color:#00f">return</span>;
+}
+
+<span style="color:#f00;font-style:italic">// Solution Three
+</span><span style="color:#f00;font-style:italic">// use bracket to creat the new property
+</span><span style="color:#f00;font-style:italic"></span>myObj[<span style="color:#009c00">&#39;name&#39;</span>] = <span style="color:#009c00">&#39;myObj&#39;</span>;
+<span style="color:#f00;font-style:italic">// or define an interface for the myObj
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">interface</span> MyObj {
+    name?: <span style="color:#00f">string</span>
+}
+
+<span style="color:#00f">var</span> myObj: <span style="color:#00f">MyObj</span> = {};
+myObj.name = <span style="color:#009c00">&#39;myObj&#39;</span>;</code></pre></div>
+
+<p>It’s kind of fun to fix these errors and you learn about the language and how the compiler can help.</p>
+
+<h2 id="4-fix-test-cases">4. Fix Test Cases</h2>
+
+<p>After successfully getting a JavaScript file from those ts files, we ran the tests against the new JavaScript files and fix all the failures.</p>
+
+<p>One example of the test failures caused by moving to TypeScript is about the difference between these two ways of exporting a function:</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">export</span> <span style="color:#00f">function</span> foo() {}
+<span style="color:#00f">export</span> <span style="color:#00f">var</span> foo = <span style="color:#00f">function</span>() {}</code></pre></div>
+
+<p>Assuming your original JavaScript code is like:</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">var</span> A = {
+	foo: <span style="color:#00f">function</span>() {},
+	bar: <span style="color:#00f">function</span>() {foo();}
+}</code></pre></div>
+
+<p>test case is like</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">var</span> origFoo = A.foo;
+<span style="color:#00f">var</span> fooCalled = <span style="color:#00f">false</span>;
+A.foo = <span style="color:#00f">function</span>(){fooCalled = <span style="color:#00f">true</span>;};
+A.bar();
+assertTrue(fooCalled);
+A.foo = origFoo;</code></pre></div>
+
+<p>If the TypeScript rewrite the JavaScript like</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#00f">export</span> <span style="color:#00f">function</span> foo() {}
+	<span style="color:#00f">export</span> <span style="color:#00f">function</span> bar() {foo();}
+}</code></pre></div>
+
+<p>The test case will fail.<br />
+Can you tell why?<br />
+Looking at the generated JavaScript code will let you know why.</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#f00;font-style:italic">// generated from export function foo() {}
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">function</span> foo() { }
+    A.foo = foo;
+    <span style="color:#00f">function</span> bar() { foo(); }
+    A.bar = bar;
+})(A || (A = {}));</code></pre></div>
+
+<p>In the test case, when the A.foo is replaced, you are just replacing the “foo” property of A<br />
+but not the foo function, bar function still calls the same foo function.</p>
+
+<p><strong>export var foo = function(){}</strong> can help.</p>
+
+<p>TypeScript</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#00f">export</span> <span style="color:#00f">var</span> foo = <span style="color:#00f">function</span> () { };
+	<span style="color:#00f">export</span> <span style="color:#00f">var</span> bar = <span style="color:#00f">function</span> () { foo(); };
+}</code></pre></div>
+
+<p>generates</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#f00;font-style:italic">// generated from expot var foo = function() {}
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    A.foo = <span style="color:#00f">function</span> () { };
+    A.bar = <span style="color:#00f">function</span> () { A.foo(); };
+})(A || (A = {}));</code></pre></div>
+
+<p>Now we can replace the foo function called by A.bar.</p>
+
+<h2 id="5-refactor-code">5. Refactor Code</h2>
+
+<p>TypeScript <strong>Modules</strong> and <strong>Classes</strong> help to organize the code in a modularized and object oriented way.</p>
+
+<p>Dependenies are referenced in the file header.</p>
+
+<p><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#f00;font-style:italic">///&lt;reference path=“moduleA.ts” /&gt;
+</span><span style="color:#f00;font-style:italic">///&lt;reference path=“moduleB.ts” /&gt;
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">module</span> ADRUM.moduleC.moduleD {
+	...
+}</code></pre></div>
+One thing I like is that when compiling one ts file, ts compiler has the “&ndash;out” option to concatenate all the directly or indirectly referenced ts files, so that I needn’t to use requirejs or browserify to for the same purpose.</p>
+
+<p>By TypeScript, we can define classes in a classical inheritenace way rather than the prototypal inheritance way which is more familar to Java and C++ programmers.</p>
+
+<p>But you lose the flexibility JavaScript provides too.
+For example, if you are seeking a way to hide a function in the class scope, save your time, <a href="https://typescript.codeplex.com/discussions/448054">it isn’t supported</a>.
+The workaround is to define the function in the module and use it in the class.</p>
+
+<p>TypeScript allows you to define modules and classes in an easy way and generates the idiomatic JavaScript for you.<br />
+As a result, I feel like you may also have less opportunites to learn more advanced JavaScript knowledge than programming in pure JavaScript.
+But just like moving from assebmly to C/C++, by and large, it’s still a good thing.</p>
+
+<p>We did not bother adding all the type information in the existing code but do it when changing or adding code.</p>
+
+<p>It is also worth moving the test cases to TypeScript, as the test cases could be auto updated when refactoring the code in the IDE.</p>
+
+<h2 id="6-fix-minification">6. Fix Minification</h2>
+
+<p>Don’t be surprised if the minifictaion is broken especially when you use Google Closure Compiler with advanced optimization.</p>
+
+<p><strong>Problem One Dead Code Mistakenly Removed</strong><br />
+The advanced optimization has a “dead code removal” feature that removes the code which recognized as unused by the compiler.
+Some early version closure compilier like version 20121212 mistakenly recognizes some code in some TypeScript modules as unused<br />
+and removes them.
+Fortunately, it’s been fixed in the latest version compiler.</p>
+
+<p><strong>Problem Two Export Symbols in Modules</strong></p>
+
+<p>To tell the compiler not to rename the symbols in your code, you need to <a href="https://developers.google.com/closure/compiler/docs/api-tutorial3#export">export the symbols</a> by the quote notation. It means you need to export you API as below to allow keep the API name so that other libraries can call them even with the minified js file.</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#00f">export</span> <span style="color:#00f">function</span> fooAPI() { }
+	A[&#39;fooAPI’] = fooAPI;
+}</code></pre></div>
+
+<p>transpiled to</p>
+
+<p><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">function</span> foo() { }
+    A.foo = foo;
+    A[<span style="color:#009c00">&#39;foo&#39;</span>] = foo;
+})(A || (A = {}));</code></pre></div>
+It’s a little bit tedious.</p>
+
+<p>Another option is to use the deprecated @expose annotation.
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#f00;font-style:italic">/**
+</span><span style="color:#f00;font-style:italic">    * @expose
+</span><span style="color:#f00;font-style:italic">    */</span>
+	<span style="color:#00f">export</span> <span style="color:#00f">function</span> fooAPI() { }
+}</code></pre></div></p>
+
+<p>But looks it’s planned to be removed in future, and hopefully you might be able to use @export while it’s removed.(Refer to the discussion at <a href="https://github.com/google/closure-compiler/issues/636">@expose annotation causes JSC_UNSAFE_NAMESPACE warning</a>.</p>
+
+<p><strong>Problem Three Export Symbols in Interfaces</strong><br />
+Say, you define a BeaconJsonData interface which will be passed to other libraries, so you want to keep its key names.</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">interface</span> BeaconJsonData {
+	url: <span style="color:#00f">string</span>,
+	metrics?: <span style="color:#00f">any</span>
+}</code></pre></div>
+
+<p>@expose does not help as the interface definition transpile to nothing.
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">interface</span> BeaconData {
+	<span style="color:#f00;font-style:italic">/**
+</span><span style="color:#f00;font-style:italic">    * @expose
+</span><span style="color:#f00;font-style:italic">    */</span>
+	url: <span style="color:#00f">string</span>,
+	<span style="color:#f00;font-style:italic">/**
+</span><span style="color:#f00;font-style:italic">    * @expose
+</span><span style="color:#f00;font-style:italic">    */</span>
+	metrics?: <span style="color:#00f">any</span>
+}</code></pre></div></p>
+
+<p>You can reserve the key names by quote notation,
+var beaconData: BeaconData = {
+    “url”: ‘www.example.com’
+    “metrics: {&hellip;}
+};</p>
+
+<p>But what if you want to assign the optional key later?
+var beaconData: BeaconData = {
+    “url”: ‘www.example.com’
+};</p>
+
+<p>// ‘metrics’ will not be renamed but you lose the type checking by ts compiler
+// because you can create any new properties with quote notation
+beaconData[‘metrics’] = {&hellip;};
+beaconData[‘metricsTypo’] = {&hellip;}; // no compiling error</p>
+
+<p>// ‘metrics’ will be renamed but dot notation is protected by type checking
+beaconData.metrics = {&hellip;};
+beaconData.metricsTypo = {&hellip;}; // compiling error</p>
+
+<p>// expose in the interface file
+/** @expose */ export var metrics;</p>
+
+<h2 id="7-auto-generate-google-closure-compiler-externs-files">7. Auto Generate Google Closure Compiler Externs Files</h2>
+
+<p>For Closure Compiler, if your js code calls external js lib’s APIs, you need to declare these APIs in an externs file to tell the compiler not to rename the symbols of these APIs. Refer to <a href="https://developers.google.com/closure/compiler/docs/api-tutorial3#no">Do Not Use Externs Instead of Exports!</a></p>
+
+<p>We used to manually create the externs files and any time use a new API, we have to manually update its externs file.</p>
+
+<p>After using TypeScript, we found that TypeScript .d.ts and the externs file have the similar information.
+They both contain the external API declarations(.d.ts files just have more typing information), so we can try to get rid of one of them..</p>
+
+<p>The first idea came into my mind is to check if typescript compiler support minification.
+As the ts compiler understand the .d.ts file, it won’t need the externs files.
+Unfortunately it doesn’t support it, so we have to stay with google closure compiler.</p>
+
+<p>Then we thought the right thing is to generate the externs files from the .d.ts files.
+Thanks to the open source ts compiler, we use it to parse the .d.ts files and convert them to externs file (see my solution at <a href="https://goo.gl/l0o6qX">https://goo.gl/l0o6qX</a>).
+Now, each time we add a new external API declaration in our .d.ts file, the API symbols automatically appears in the externs file when build our project.</p>
+
+<h2 id="8-wrap-the-ts-code-in-one-function">8. Wrap the ts code in one function</h2>
+
+<p>Ts compiler generates code for modules like below:</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#f00;font-style:italic">// typescript
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">module</span> A {
+    <span style="color:#00f">export</span> <span style="color:#00f">var</span> a: <span style="color:#00f">number</span>;
+}
+
+<span style="color:#00f">module</span> A.B {
+    <span style="color:#00f">export</span> <span style="color:#00f">var</span> b: <span style="color:#00f">number</span>;
+}
+
+<span style="color:#f00;font-style:italic">// converted to ==&gt; 
+</span><span style="color:#f00;font-style:italic"></span>
+<span style="color:#f00;font-style:italic">// javascript
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    A.a;
+})(A || (A = {}));
+<span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">var</span> B;
+    (<span style="color:#00f">function</span> (B) {
+        B.b;
+    })(B = A.B || (A.B = {}));
+})(A || (A = {}));</code></pre></div>
+
+<p>For each module, there is a variable created and a function called.
+The function creates properties in the module variable for exported symbols.</p>
+
+<p>However, sometimes you want to stop execution for some condition like your libraries
+has be defined or it has been disabled, you need to wrap all the js code in a function by yourself, like</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts">(<span style="color:#00f">function</span>(){
+    <span style="color:#00f">if</span> (global.ADRUM || global.ADRUM_DISABLED) {
+    	<span style="color:#00f">return</span>;
+    } 
+    
+    <span style="color:#f00;font-style:italic">// typescript generated javascript
+</span><span style="color:#f00;font-style:italic"></span>}(global);</code></pre></div>
+
+<h1 id="typescript-main-benefits-to-us">TypeScript Main Benefits to Us</h1>
+
+<ol>
+<li>Class and Module support<br /></li>
+<li>ES6 features support</li>
+</ol>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#f00;font-style:italic">// class
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">class</span> B <span style="color:#00f">extends</span> A {
+	<span style="color:#00f">private</span> a: <span style="color:#00f">number</span>;
+	<span style="color:#00f">constructor</span>(b) {
+		<span style="color:#00f">super</span>(b);
+		<span style="color:#00f">this</span>.a = 0;
+	}
+	
+	method(): <span style="color:#00f">void</span> {
+		console.log(<span style="color:#00f">this</span>.a);
+	}
+	
+	<span style="color:#00f">static</span> method() {
+		console.log(‘I am a <span style="color:#00f">static</span> method’);
+	}
+}
+
+<span style="color:#f00;font-style:italic">// for..of loops
+</span><span style="color:#f00;font-style:italic"></span><span style="color:#00f">var</span> arr = [‘a’, ‘b’, ‘c’];
+<span style="color:#00f">for</span> (<span style="color:#00f">let</span> item of arr) {
+	console.log(item);
+}</code></pre></div>
+
+<ol>
+<li>More smooth to switch back toand forth between frontend and backend coding as in contrary to JavaScript, TypeScript syntax is more similar to Java than JavaScript.</li>
+<li>APIs are clearly declared in .d.ts</li>
+<li>Static type checks to surfface more bugs at compiling time<br />
+For example if we use the wrong data type in our browser beacon, we now can get compiling errors while before using typescript, can only be found by testing against backend.
+Refer to <a href="http://kangax.github.io/compat-table/es6/#typescript">TypeScript ES6 Compatibility Table</a> for more ES6 features you can use.</li>
+<li>Easily to tailor the js library into multiple versions. For example, we from the same coe base, we can generate specific verions for desktop browser and mobile browser with specific features on difference devices. We just need to create a main ts file and reference the modules to include for each version.</li>
+<li>Extra bonus when we start using Scala as they have <a href="http://www.slideshare.net/razvanc/quick-typescript-vs-scala-sample">similar syntax</a></li>
+</ol>
+
+<h1 id="wanted-features">Wanted Features</h1>
+
+<ol>
+<li>Can we merge the same module in the same function rather than multiple functions?</li>
+</ol>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#00f">function</span> foo() { }
+}
+
+<span style="color:#00f">module</span> A {
+	<span style="color:#00f">function</span> bar() {
+		foo();
+	}
+}</code></pre></div>
+
+<p>generates below code with compiling error “cannot find name ‘foo’”.</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">function</span> foo() { }
+})(A || (A = {}));
+<span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">function</span> bar() {
+        foo();
+    }
+})(A || (A = {}));</code></pre></div>
+
+<p>foo function defined within the first anonymous function call for module A is not visible in the second anonymous function call, you have to export it as</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#00f">export</span> <span style="color:#00f">function</span> foo() { }
+}
+
+<span style="color:#00f">module</span> A {
+	<span style="color:#00f">function</span> bar() {
+		foo();
+	}
+}</code></pre></div>
+
+<p>generates below code without error</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">function</span> foo() { }
+    A.foo = foo;
+})(A || (A = {}));
+<span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">function</span> bar() {
+        A.foo();
+    }
+})(A || (A = {}));</code></pre></div>
+
+<p>The problem here is now A.foo is not only visible to module A, anyone can call it and change it now.</p>
+
+<p>There is no module level visible concept which should be similar to Java’s “package-private” when there is no modifier for Java classes or members.</p>
+
+<p>This could be solved by generating</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#00f">export</span> <span style="color:#00f">function</span> foo() { }
+}
+
+<span style="color:#00f">module</span> A {
+	<span style="color:#00f">function</span> bar() {
+		foo();
+	}
+}</code></pre></div>
+
+<p>to</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">var</span> A;
+(<span style="color:#00f">function</span> (A) {
+    <span style="color:#00f">function</span> foo() { }
+
+    <span style="color:#00f">function</span> bar() {
+        foo();
+    }
+})(A || (A = {}));</code></pre></div>
+
+<p>The problem of merging into one function is there could be name conflicts between the same module in two files. But the compiler can report error in this case, and if it’s the same that two people are working independently on the same module in two files, isn’t it better to create a two different sub modules?</p>
+
+<p>So I think merging into one function could be a feasible way support module level visibility.</p>
+
+<p>When I am writing this article, I find the <strong>/* @internal */</strong> annotation in the ts compiler source code and it’s an experimental option released with typescript 1.5.0-alpha to <a href="https://github.com/Microsoft/TypeScript/pull/1913">strip the declarations marked as @internal</a>.</p>
+
+<p>It helps to only include the declarations without @internal(which serves as your external APIs) when generating the .d.ts file from your code.</p>
+
+<p>And if your consumer are using TypeScript too, this prevents if from using your interal members.</p>
+
+<p>Generating the .d.ts file for</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">module</span> A {
+	<span style="color:#f00;font-style:italic">/* @internal */</span> <span style="color:#00f">export</span> <span style="color:#00f">function</span> internal() {}
+	<span style="color:#00f">export</span> <span style="color:#00f">function</span> external() {}
+}</code></pre></div>
+
+<p>by</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tsc -d --stripInternal A.ts</code></pre></div>
+
+<p>will output</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#00f">declare</span> <span style="color:#00f">module</span> A {
+    <span style="color:#00f">function</span> external(): <span style="color:#00f">void</span>;
+}</code></pre></div>
+
+<p>However, if your consumer uses JavaScript, they can still use the internal function.</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>By and large, it’s a pleasant and rewarding experience to move to TypeScript.
+Thought it adds limitations on your JavaScript implementation, you can either find a good workaround or the benefits outweigh it.</p>
+
+<p>It’s now an active open source project (about 300 commits to master in last month) with well documentation to help you start easily.</p>
+
+<p>And just two month ago, Google has also announced to stop AtScript and replaced it with TypeScript.
+Angular 2 is now built with TypeScript too.</p>
+
+<p>So far, we are happy that we moved to TypeScript.</p>
+
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div><a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+</body>
+</html>
